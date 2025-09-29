@@ -3,41 +3,81 @@
 
 # ویژگی ها
 1.نظرات تو در تو با ساختار درختی
+**
 2.احراز هویت OTP و JWT و ذخیره توکن در کوکی
+**
 3.صفحه بندی نظرات اصلی
+**
 4.ایجاد، ویرایش ، حذف نظرات با بررسی ثبت نام قبلی و نقش (user,admin)
 
 # کتابخانه و ابزار های استفاده شده 
 1.express فریم‌ورک اصلی
+**
 2.dotenv مدیریت متغیرهای محیطی
+**
 3.mongoose پایگاه داده
+**
 4.jsonwebtoken احراز هویت
+**
 5.cookie-parser مدیریت کوکی
 
 
 # مدل های داده
-*باید نوشته شود
-User
+
 {
-    *userName:String minLength:3 maxLength:20
-    *phoneNumber:String باید 11رقم باشد
-    otp:String کد یکبار مصرف
-    otpExpire:Date تاریخ انقضای کد 
-    role:String 'admin' یا 'user' پیشفرض:'user'
+  userName: { 
+    type: String, 
+    required: true, 
+    minLength: 3, 
+    maxLength: 20 
+  },
+  phoneNumber: { 
+    type: String, 
+    required: true, 
+    match: /^\d{11}$/ 
+  },
+  otp: String,
+  otpExpire: Date,
+  role: { 
+    type: String, 
+    enum: ['user', 'admin'], 
+    default: 'user' 
+  }
 }
+
 
 Post
 {
-    *title:String عنوان پست
-    *content:String محتوای پست
+  title: { 
+    type: String, 
+    required: true 
+  },
+  content: { 
+    type: String, 
+    required: true 
+  }
 }
 
 Comment
 {
-*postId:ObjectId ای دی مربوط به پست
-user:ObjectId ای دی مربوط به کاربر
-*content:String محتوای نظر
-parentId:ObjectId ای دی مربوط به کامنت برای پاسخ به ان
+  postId: { 
+    type: ObjectId, 
+    ref: "Post", 
+    required: true 
+  },
+  user: { 
+    type: ObjectId, 
+    ref: "User" 
+  },
+  content: { 
+    type: String, 
+    required: true 
+  },
+  parentId: { 
+    type: ObjectId, 
+    ref: "Comment", 
+    default: null 
+  }
 }
 
 # api route 
